@@ -15,7 +15,8 @@
 <h2>📦 ระบบจองคิวคืนตู้คอนเทนเนอร์</h2>
 
 <form id="bookingForm">
-
+<input type="hidden" name="line_user_id" id="line_user_id">
+  
 <label>ชื่อบริษัท</label>
 <input type="text" name="company" required>
 
@@ -127,9 +128,11 @@
 <div id="loadingOverlay" class="loading-overlay">
   <div class="spinner"></div>
 </div>
-  
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </body>
 </html>
+
 
 
 
