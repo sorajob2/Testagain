@@ -1,4 +1,4 @@
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby95s2ndawm3iXcVaBy8zL2w8TI2g89WgoxC530kBStepVUSomFjHOVONGA7_SCMdElEA/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwGl9Yjm5RBZFBIL-nFmgMYMv_Rjl6cx6YJARII2_cBictluFLjzrnhfDh12QKum597zA/exec";
 
 let allBookings = [];
 
@@ -118,4 +118,5 @@ window.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("line_user_id").value = profile.userId;
 
 });
+
 
