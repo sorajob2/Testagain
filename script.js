@@ -1,122 +1,137 @@
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwGl9Yjm5RBZFBIL-nFmgMYMv_Rjl6cx6YJARII2_cBictluFLjzrnhfDh12QKum597zA/exec";
 
-let allBookings = [];
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ระบบจองคิวคืนตู้คอนเทนเนอร์</title>
 
-// =============================
-// โหลดข้อมูลการจองทั้งหมด
-// =============================
-async function fetchBookings() {
-  try {
-    const response = await fetch(WEB_APP_URL);
-    allBookings = await response.json();
-  } catch (error) {
-    console.error("โหลดข้อมูลล้มเหลว:", error);
-  }
-}
+<link rel="stylesheet" href="style.css">
+</head>
 
-// =============================
-// อัปเดตเวลาที่ต้องปิด
-// =============================
-function updateDisabledTimes(selectedDate) {
+<body>
 
-  const timeSelect = document.getElementById("time");
-  const options = timeSelect.querySelectorAll("option");
+<div class="container">
+<h2>📦 ระบบจองคิวคืนตู้คอนเทนเนอร์</h2>
 
-  options.forEach(option => option.disabled = false);
+<form id="bookingForm">
 
-  if (!selectedDate) return;
+<label>ชื่อบริษัท</label>
+<input type="text" name="company" required>
 
-  allBookings.forEach(b => {
-    if (b.date === selectedDate) {
-      options.forEach(option => {
-        if (option.value === b.time) {
-          option.disabled = true;
-        }
-      });
-    }
-  });
-}
+<label>ชื่อผู้ติดต่อ</label>
+<input type="text" name="contact" required>
 
-// =============================
-// โหลดข้อมูลตอนเปิดหน้าเว็บ
-// =============================
-document.addEventListener("DOMContentLoaded", async () => {
+<label>เบอร์โทร</label>
+<input type="text" name="phone" required>
 
-  await fetchBookings();
+<label>ทะเบียนหน้ารถ</label>
+<input type="text" name="front_plate" required>
 
-  const dateInput = document.getElementById("date");
+<label>ทะเบียนหลังรถ</label>
+<input type="text" name="back_plate" required>
 
-  if (dateInput.value) {
-    updateDisabledTimes(dateInput.value);
-  }
+<label>หมายเลขตู้</label>
+<input type="text" name="container_no" required>
 
-});
+<label for="shipping_line">สายเรือ</label>
+<select id="shipping_line" name="shipping_line" required>
+  <option value="">-- กรุณาเลือกสายเรือ --</option>
+  <option value="MSC">MSC</option>
+  <option value="CMA CGM">CMA CGM</option>
+  <option value="ONE">ONE</option>
+  <option value="Evergreen Line">Evergreen Line</option>
+  <option value="COSCO Shipping">COSCO Shipping</option>
+  <option value="Hapag Lloyd">Hapag Lloyd</option>
+  <option value="OOCL Line">OOCL Line</option>
+  <option value="Maersk Line">Maersk Line</option>
+  <option value="Yang Ming Line">Yang Ming Line</option>
+  <option value="ZIM Line">ZIM Line</option>
+  <option value="PIL">PIL</option>
+</select>
 
-// =============================
-// เมื่อเลือกวันที่
-// =============================
-document.getElementById("date").addEventListener("change", function () {
-  updateDisabledTimes(this.value);
-});
+<label for="container_type">ประเภทตู้</label>
+<select id="container_type" name="container_type" required>
+  <option value="">-- เลือกประเภทตู้ --</option>
+  <option value="20'">20'</option>
+  <option value="40'">40'</option>
+</select>
+  
+<label>วันที่จอง</label>
+<input type="date" id="date" name="date" required disabled>
 
-// =============================
-// เมื่อกดส่งฟอร์ม
-// =============================
-document.getElementById("bookingForm").addEventListener("submit", async function (e) {
+<label>ช่วงเวลา</label>
+<select id="time" name="time" required disabled>
+  <option value="">เลือกช่วงเวลา</option>
 
-  e.preventDefault();
+  <option>08:00</option>
+  <option>08:15</option>
+  <option>08:30</option>
+  <option>08:45</option>
 
-  const formData = new FormData(this);
-  const selectedDate = formData.get("date");
+  <option>09:00</option>
+  <option>09:15</option>
+  <option>09:30</option>
+  <option>09:45</option>
 
-  const params = new URLSearchParams();
-  formData.forEach((value, key) => {
-    params.append(key, value);
-  });
+  <option>10:00</option>
+  <option>10:15</option>
+  <option>10:30</option>
+  <option>10:45</option>
 
-  try {
+  <option>11:00</option>
+  <option>11:15</option>
+  <option>11:30</option>
+  <option>11:45</option>
 
-    // 🔥 ใช้ no-cors แก้ปัญหา CORS
-    await fetch(WEB_APP_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      body: params.toString()
-    });
+  <option>12:00</option>
+  <option>12:15</option>
+  <option>12:30</option>
+  <option>12:45</option>
 
-    // ถือว่าสำเร็จทันที
-    alert("จองคิวสำเร็จ");
-    this.reset();
+  <option>13:00</option>
+  <option>13:15</option>
+  <option>13:30</option>
+  <option>13:45</option>
 
-    // โหลดข้อมูลใหม่หลังส่ง
-    await fetchBookings();
-    updateDisabledTimes(selectedDate);
+  <option>14:00</option>
+  <option>14:15</option>
+  <option>14:30</option>
+  <option>14:45</option>
 
-  } catch (error) {
+  <option>15:00</option>
+  <option>15:15</option>
+  <option>15:30</option>
+  <option>15:45</option>
 
-    console.error("POST ล้มเหลว:", error);
+  <option>16:00</option>
+  <option>16:15</option>
+  <option>16:30</option>
+  <option>16:45</option>
+</select>
 
-  }
+<label>หมายเหตุ</label>
+<textarea name="note"></textarea>
+
+<button type="submit">🚚 จองคิว</button>
+
+<div class="success" id="successMsg">
+  ✅ จองคิวสำเร็จ!
+</div>
+
+</form>
+</div>
+
+<script src="script.js"></script>
+
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="spinner"></div>
+</div>
+  
+</body>
+</html>
 
 
-});
 
-const LIFF_ID = "2009290805-KkRsXWiw";
-
-window.addEventListener("DOMContentLoaded", async () => {
-
-  await liff.init({ liffId: LIFF_ID });
-
-  if (!liff.isLoggedIn()) {
-    liff.login();
-    return;
-  }
-
-  const profile = await liff.getProfile();
-  document.getElementById("line_user_id").value = profile.userId;
-
-});
 
 
