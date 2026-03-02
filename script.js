@@ -42,13 +42,15 @@ function updateDisabledTimes(selectedDate) {
 // =============================
 document.addEventListener("DOMContentLoaded", async () => {
 
-  await fetchBookings();
-
   const dateInput = document.getElementById("date");
+  const timeSelect = document.getElementById("time");
 
-  if (dateInput.value) {
-    updateDisabledTimes(dateInput.value);
-  }
+  dateInput.disabled = true;
+  timeSelect.disabled = true;
+
+  await fetchBookings();   // ✅ รอโหลดข้อมูลให้เสร็จก่อน
+
+  dateInput.disabled = false;  // ✅ ค่อยเปิดให้เลือกวันที่
 
 });
 
@@ -56,7 +58,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 // เมื่อเลือกวันที่
 // =============================
 document.getElementById("date").addEventListener("change", function () {
-  updateDisabledTimes(this.value);
+
+  const timeSelect = document.getElementById("time");
+
+  if (this.value) {
+    timeSelect.disabled = false; // ✅ เปิดให้เลือกเวลา
+    updateDisabledTimes(this.value);
+  } else {
+    timeSelect.disabled = true;  // ✅ ปิดถ้ายังไม่เลือกวันที่
+  }
+
 });
 
 // =============================
@@ -66,17 +77,20 @@ document.getElementById("bookingForm").addEventListener("submit", async function
 
   e.preventDefault();
 
+  const overlay = document.getElementById("loadingOverlay");
+  const submitBtn = this.querySelector("button[type='submit']");
+
+  // 🔵 แสดง spinner + ปิดปุ่ม
+  overlay.style.display = "flex";
+  submitBtn.disabled = true;
+  submitBtn.innerText = "กำลังส่ง...";
+
   const formData = new FormData(this);
   const selectedDate = formData.get("date");
-
-  const params = new URLSearchParams();
-  formData.forEach((value, key) => {
-    params.append(key, value);
-  });
+  const params = new URLSearchParams(formData);
 
   try {
 
-    // 🔥 ใช้ no-cors แก้ปัญหา CORS
     await fetch(WEB_APP_URL, {
       method: "POST",
       mode: "no-cors",
@@ -86,20 +100,28 @@ document.getElementById("bookingForm").addEventListener("submit", async function
       body: params.toString()
     });
 
-    // ถือว่าสำเร็จทันที
-    alert("จองคิวสำเร็จ");
+    // รีเซ็ตฟอร์ม
     this.reset();
 
-    // โหลดข้อมูลใหม่หลังส่ง
+    // โหลดข้อมูลใหม่
     await fetchBookings();
     updateDisabledTimes(selectedDate);
+
+    alert("จองคิวสำเร็จ");
 
   } catch (error) {
 
     console.error("POST ล้มเหลว:", error);
+    alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+
+  } finally {
+
+    // 🔴 ซ่อน spinner + เปิดปุ่ม
+    overlay.style.display = "none";
+    submitBtn.disabled = false;
+    submitBtn.innerText = "จองคิว";
 
   }
-
 
 });
 
@@ -118,4 +140,5 @@ window.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("line_user_id").value = profile.userId;
 
 });
+
 
