@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ระบบจองคิวตู้คอนเทนเนอร์</title>
+<title>ระบบจองคิวคืนตู้คอนเทนเนอร์</title>
 
 <link rel="stylesheet" href="style.css">
 </head>
@@ -11,10 +12,9 @@
 <body>
 
 <div class="container">
-<h2>📦 ระบบจองคิวตู้คอนเทนเนอร์</h2>
+<h2>📦 ระบบจองคิวคืนตู้คอนเทนเนอร์</h2>
 
 <form id="bookingForm">
-<input type="hidden" name="line_user_id" id="line_user_id">
 
 <label>ชื่อบริษัท</label>
 <input type="text" name="company" required>
@@ -34,14 +34,34 @@
 <label>หมายเลขตู้</label>
 <input type="text" name="container_no" required>
 
-<label>สายเรือ</label>
-<input type="text" name="shipping_line" required>
+<label for="shipping_line">สายเรือ</label>
+<select id="shipping_line" name="shipping_line" required>
+  <option value="">-- กรุณาเลือกสายเรือ --</option>
+  <option value="MSC">MSC</option>
+  <option value="CMA CGM">CMA CGM</option>
+  <option value="ONE">ONE</option>
+  <option value="Evergreen Line">Evergreen Line</option>
+  <option value="COSCO Shipping">COSCO Shipping</option>
+  <option value="Hapag Lloyd">Hapag Lloyd</option>
+  <option value="OOCL Line">OOCL Line</option>
+  <option value="Maersk Line">Maersk Line</option>
+  <option value="Yang Ming Line">Yang Ming Line</option>
+  <option value="ZIM Line">ZIM Line</option>
+  <option value="PIL">PIL</option>
+</select>
 
+<label for="container_type">ประเภทตู้</label>
+<select id="container_type" name="container_type" required>
+  <option value="">-- เลือกประเภทตู้ --</option>
+  <option value="20'">20'</option>
+  <option value="40'">40'</option>
+</select>
+  
 <label>วันที่จอง</label>
-<input type="date" id="date" name="date" required>
+<input type="date" id="date" name="date" required disabled>
 
 <label>ช่วงเวลา</label>
-<select id="time" name="time" required>
+<select id="time" name="time" required disabled>
   <option value="">เลือกช่วงเวลา</option>
 
   <option>08:00</option>
@@ -103,8 +123,15 @@
 </div>
 
 <script src="script.js"></script>
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="spinner"></div>
+</div>
+  
 </body>
 </html>
+
+
+
 
 
