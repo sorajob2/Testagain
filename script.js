@@ -102,3 +102,20 @@ document.getElementById("bookingForm").addEventListener("submit", async function
 
 
 });
+
+const LIFF_ID = "2009290805-KkRsXWiw";
+
+window.addEventListener("DOMContentLoaded", async () => {
+
+  await liff.init({ liffId: LIFF_ID });
+
+  if (!liff.isLoggedIn()) {
+    liff.login();
+    return;
+  }
+
+  const profile = await liff.getProfile();
+  document.getElementById("line_user_id").value = profile.userId;
+
+});
+
