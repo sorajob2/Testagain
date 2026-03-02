@@ -1,4 +1,4 @@
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz8BlXtp79RJdfOaL3nJC82Az4Le6AU-hRqwumEnA20WFK6kB46oulypSYMfK5_41wJ-g/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby95s2ndawm3iXcVaBy8zL2w8TI2g89WgoxC530kBStepVUSomFjHOVONGA7_SCMdElEA/exec";
 
 let allBookings = [];
 
@@ -99,5 +99,6 @@ document.getElementById("bookingForm").addEventListener("submit", async function
     console.error("POST ล้มเหลว:", error);
 
   }
+
 
 });
