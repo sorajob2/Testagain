@@ -40,6 +40,7 @@ function updateDisabledTimes(selectedDate) {
 // =============================
 // โหลดข้อมูลตอนเปิดหน้าเว็บ
 // =============================
+const LIFF_ID = "2009290805-KkRsXWiw";
 document.addEventListener("DOMContentLoaded", async () => {
 
   const dateInput = document.getElementById("date");
@@ -48,9 +49,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   dateInput.disabled = true;
   timeSelect.disabled = true;
 
-  await fetchBookings();   // ✅ รอโหลดข้อมูลให้เสร็จก่อน
+  // ✅ เริ่ม LIFF ก่อน
+  await liff.init({ liffId: LIFF_ID });
 
-  dateInput.disabled = false;  // ✅ ค่อยเปิดให้เลือกวันที่
+  if (!liff.isLoggedIn()) {
+    liff.login();
+    return;
+  }
+
+  const profile = await liff.getProfile();
+  document.getElementById("line_user_id").value = profile.userId;
+
+  // ✅ ค่อยโหลด booking หลัง login เสร็จ
+  await fetchBookings();
+  dateInput.disabled = false;
 
 });
 
@@ -125,21 +137,10 @@ document.getElementById("bookingForm").addEventListener("submit", async function
 
 });
 
-const LIFF_ID = "2009290805-KkRsXWiw";
 
-window.addEventListener("DOMContentLoaded", async () => {
 
-  await liff.init({ liffId: LIFF_ID });
 
-  if (!liff.isLoggedIn()) {
-    liff.login();
-    return;
-  }
 
-  const profile = await liff.getProfile();
-  document.getElementById("line_user_id").value = profile.userId;
-
-});
 
 
 
